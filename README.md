@@ -45,28 +45,39 @@ git add skills-lock.json
 Anyone who opens the project with this plugin enabled gets the skill restored on
 session start. Verify with `/skills`.
 
-### First-run note
+### First-run note (important)
 
-Claude Code indexes a project's `.claude/skills/` at startup, *before* this
-hook runs. So the restore is picked up automatically as long as that directory
-already exists when the session starts:
+Claude Code indexes `.claude/skills/` at startup, *before* this hook runs. The
+rule that follows from testing: **Claude picks up skill entries that *appear*
+after the hook runs, but not entries that were already present-but-broken when it
+first scanned.** That produces three distinct cases:
 
-- **Second session onward:** auto-loads at startup (the directory now exists
-  from the previous restore). No action needed.
-- **Very first session in a pristine clone** (no `.claude/skills/` yet): the
-  skill is restored to disk but Claude already finished its scan — run
-  `/reload-skills` once, or just reopen the session.
+| At session start | First session | Later sessions |
+| --- | --- | --- |
+| Nothing (`.claude/skills/` absent) | ❌ needs `/reload-skills` once | ✅ auto-loads |
+| `.claude/skills/.gitkeep` committed (dir exists, empty) | ✅ auto-loads | ✅ auto-loads |
+| Restored symlink committed (dangling until restore) | ❌ needs `/reload-skills` once | ✅ auto-loads |
 
-To make the **first** session auto-load too, commit an empty marker so the
-directory exists at clone time:
+So:
 
-```sh
-mkdir -p .claude/skills && touch .claude/skills/.gitkeep
-git add .claude/skills/.gitkeep
-```
+- **For first-session auto-load**, commit an empty marker so the directory
+  exists at clone time and the hook's freshly-created link is a *new* entry:
 
-With `.claude/skills/` present at startup, the hook fills it and Claude indexes
-the restored skill in the same first session.
+  ```sh
+  mkdir -p .claude/skills && touch .claude/skills/.gitkeep
+  git add .claude/skills/.gitkeep
+  ```
+
+- **Committing the restored symlink itself** is a valid "clean `git status` +
+  self-healing" choice (dangling on clone, valid after the first restore), but
+  it does **not** buy first-session load — Claude saw that entry as broken
+  during its startup scan and won't re-evaluate it until `/reload-skills` or the
+  next session. You can't have both a committed symlink *and* first-session
+  load; that broken-at-startup entry is exactly the case Claude skips.
+
+- **Doing nothing** works too — the skill is restored to disk on the first
+  session and auto-loads from the second onward; the first session just needs
+  one `/reload-skills` (or a reopen).
 
 ## What it does (and doesn't)
 
