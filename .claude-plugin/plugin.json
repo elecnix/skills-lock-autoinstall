@@ -1,10 +1,19 @@
 {
   "name": "skills-lock-autoinstall",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Auto-installs agent skills from an npx skills lock file (skills-lock.json) on session start.",
-  "author": { "name": "Nicolas Marchildon", "url": "https://github.com/elecnix" },
+  "author": {
+    "name": "Nicolas Marchildon",
+    "url": "https://github.com/elecnix"
+  },
   "homepage": "https://github.com/elecnix/skills-lock-autoinstall",
   "repository": "https://github.com/elecnix/skills-lock-autoinstall",
   "license": "MIT",
-  "keywords": ["skills", "skills-lock", "npx-skills", "session-start", "lockfile"]
+  "keywords": [
+    "skills",
+    "skills-lock",
+    "npx-skills",
+    "session-start",
+    "lockfile"
+  ]
 }

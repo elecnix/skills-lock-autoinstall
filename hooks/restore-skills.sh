@@ -27,3 +27,9 @@ if [ -d "$dir/.agents/skills" ]; then
     [ -e "$link" ] || ln -s "../../.agents/skills/$name" "$link"
   done
 fi
+
+# Tell Claude Code to re-scan skill/command directories *after* SessionStart
+# hooks finish, so a skill we just restored loads in this same first session
+# (otherwise it isn't indexed until /reload-skills or the next session). This
+# JSON is the only thing we print to stdout — keep all other output silenced.
+printf '%s\n' '{"hookSpecificOutput":{"hookEventName":"SessionStart","reloadSkills":true}}'
