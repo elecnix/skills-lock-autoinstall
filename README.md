@@ -45,6 +45,29 @@ git add skills-lock.json
 Anyone who opens the project with this plugin enabled gets the skill restored on
 session start. Verify with `/skills`.
 
+### First-run note
+
+Claude Code indexes a project's `.claude/skills/` at startup, *before* this
+hook runs. So the restore is picked up automatically as long as that directory
+already exists when the session starts:
+
+- **Second session onward:** auto-loads at startup (the directory now exists
+  from the previous restore). No action needed.
+- **Very first session in a pristine clone** (no `.claude/skills/` yet): the
+  skill is restored to disk but Claude already finished its scan — run
+  `/reload-skills` once, or just reopen the session.
+
+To make the **first** session auto-load too, commit an empty marker so the
+directory exists at clone time:
+
+```sh
+mkdir -p .claude/skills && touch .claude/skills/.gitkeep
+git add .claude/skills/.gitkeep
+```
+
+With `.claude/skills/` present at startup, the hook fills it and Claude indexes
+the restored skill in the same first session.
+
 ## What it does (and doesn't)
 
 - Runs a single `SessionStart` (`startup`) hook: `npx skills experimental_install`.
