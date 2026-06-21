@@ -1,8 +1,11 @@
 # skills-lock-autoinstall
 
-A Claude Code plugin that does one thing: **auto-install agent skills from an
+> A **[Claude Code](https://docs.claude.com/en/docs/claude-code) plugin**.
+
+Does one thing: **auto-install agent skills from an
 [`npx skills`](https://github.com/vercel-labs/skills) lock file on session
-start.**
+start.** Install it with `claude plugin install` (see below) — it is not an npm
+package or a standalone CLI.
 
 If a project has a `skills-lock.json` at its root, this plugin restores the
 pinned skills into the project (`npx skills experimental_install`) every time you
@@ -45,6 +48,9 @@ session start. Verify with `/skills`.
 ## What it does (and doesn't)
 
 - Runs a single `SessionStart` (`startup`) hook: `npx skills experimental_install`.
+- Mirrors the restored skills into `.claude/skills/` (where Claude Code reads
+  them) — `skills` restores into `.agents/skills/` but does not always create
+  that link ([vercel-labs/skills#1355](https://github.com/vercel-labs/skills/issues/1355)).
 - Silent and non-fatal — a missing `npx` or network blip never blocks startup.
 - Does **not** add, remove, or update which skills are pinned — that is the
   `npx skills` CLI's job. This plugin only restores what the lock file already
