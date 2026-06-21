@@ -1,0 +1,12 @@
+{
+  "name": "skills-lock-autoinstall",
+  "description": "A single-plugin marketplace that auto-installs agent skills from an npx skills lock file on session start.",
+  "owner": { "name": "Nicolas Marchildon", "url": "https://github.com/elecnix" },
+  "plugins": [
+    {
+      "name": "skills-lock-autoinstall",
+      "source": "./",
+      "description": "Auto-installs agent skills from an npx skills lock file (skills-lock.json) on session start."
+    }
+  ]
+}
