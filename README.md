@@ -42,36 +42,14 @@ echo ".agents/skills/" >> .gitignore   # don't vendor the restored content
 git add skills-lock.json
 ```
 
-Anyone who opens the project with this plugin enabled gets the skill restored on
-session start. Verify with `/skills`.
-
-### First-run: loads in the same session
-
-Claude Code indexes `.claude/skills/` at startup, *before* `SessionStart` hooks
-run — so a skill the hook restores would normally not appear until
-`/reload-skills` or the next session. This plugin closes that gap: its hook
-prints
-
-```json
-{"hookSpecificOutput":{"hookEventName":"SessionStart","reloadSkills":true}}
-```
-
-which tells Claude Code to **re-scan skill and command directories after the
-`SessionStart` hooks finish** (the `reloadSkills` output field, added in Claude
-Code v2.1.152). The restored skill is therefore available in the *same first
-session* — no `/reload-skills`, no `.gitkeep`, no committed symlink, in a
-completely pristine clone. Verified end-to-end.
-
-> Requires Claude Code ≥ 2.1.152. On older versions the restore still happens,
-> but the skill loads from the second session (or after `/reload-skills`).
+Anyone who opens the project with this plugin enabled gets the skill
+automatically, available in the same session. Verify with `/skills`.
 
 ## What it does (and doesn't)
 
-- Runs a single `SessionStart` (`startup`) hook: `npx skills experimental_install`.
-- Mirrors the restored skills into `.claude/skills/` (where Claude Code reads
-  them) — `skills` restores into `.agents/skills/` but does not always create
-  that link ([vercel-labs/skills#1355](https://github.com/vercel-labs/skills/issues/1355)).
-- Emits `reloadSkills: true` so the restore loads in the same first session.
+- Runs a single `SessionStart` hook that restores the lock file's skills
+  (`npx skills experimental_install`).
+- Makes the restored skills available immediately, in the same session.
 - Silent and non-fatal — a missing `npx` or network blip never blocks startup.
 - Does **not** add, remove, or update which skills are pinned — that is the
   `npx skills` CLI's job. This plugin only restores what the lock file already
