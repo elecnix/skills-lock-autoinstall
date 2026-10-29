@@ -1,0 +1,20 @@
+name: pr-body-format
+
+# Flags a pull-request description that renders badly on GitHub. Advisory.
+on:
+  pull_request:
+    types: [opened, edited, reopened, synchronize]
+
+permissions:
+  contents: read
+  pull-requests: read
+
+concurrency:
+  group: pr-body-format-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  pr-body-format:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: elecnix/gh-pr-body-action@v1

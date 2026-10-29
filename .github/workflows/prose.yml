@@ -1,0 +1,22 @@
+name: prose
+
+# Lints the markdown a pull request changes, using the rules in .vale.ini.
+on:
+  pull_request:
+    types: [opened, edited, reopened, synchronize]
+
+permissions:
+  contents: read
+  pull-requests: write
+  checks: write
+
+concurrency:
+  group: prose-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  vale:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: elecnix/vale-action@v1

@@ -1,0 +1,21 @@
+name: review
+on:
+  pull_request:
+permissions:
+  contents: read
+  pull-requests: write
+  checks: write
+concurrency:
+  group: cite-pr-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Review this pull request with Cite
+        uses: elecnix/cite@e790f27116e76c26aa8b4f6c6437c5bec6c5cc30  # v0.16.0
+        with:
+          model_api_key: ${{ secrets.OLLAMA_API_KEY }}
+          model_base_url: https://ollama.com/v1
+          model_id: deepseek-v4.1-flash
+          structured_output: tools
