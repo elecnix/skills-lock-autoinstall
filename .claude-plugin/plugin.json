@@ -1,6 +1,6 @@
 {
   "name": "skills-lock-autoinstall",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Auto-installs agent skills from an npx skills lock file (skills-lock.json) on session start.",
   "author": {
     "name": "Nicolas Marchildon",
