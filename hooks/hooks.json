@@ -11,6 +11,18 @@
           }
         ]
       }
+    ],
+    "FileChanged": [
+      {
+        "matcher": "skills-lock.json",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "${CLAUDE_PLUGIN_ROOT}/hooks/restore-skills.sh watch",
+            "timeout": 120
+          }
+        ]
+      }
     ]
   }
 }
