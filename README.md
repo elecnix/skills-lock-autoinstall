@@ -50,6 +50,17 @@ automatically, available in the same session. Verify with `/skills`.
 - Runs a single `SessionStart` hook that restores the lock file's skills
   (`npx skills experimental_install`).
 - Makes the restored skills available immediately, in the same session.
+- Watches `skills-lock.json` during the session. When it changes (for example
+  after `npx skills add` or `npx skills remove`), a `FileChanged` hook restores
+  again and asks Claude Code to reload skills. The hook records the hash of the
+  lock it last restored in `.agents/.skills-lock-restored` and ignores events
+  that carry the same content, so its own write-back of the lock does not
+  trigger another restore. Claude Code documents `reloadSkills` only for
+  `SessionStart`; if a skill added mid-session does not appear, run
+  `/reload-skills`.
+- Does not prune skills you remove from the lock. `npx skills experimental_install`
+  restores what the lock declares and deletes nothing, so a removed skill's
+  files stay in `.agents/skills/` until you delete them.
 - Silent and non-fatal — a missing `npx` or network blip never blocks startup.
 - Leaves `skills-lock.json` byte for byte as it was. The CLI has no frozen
   mode and rewrites the hashes of a source that serves only its current
