@@ -51,6 +51,11 @@ automatically, available in the same session. Verify with `/skills`.
   (`npx skills experimental_install`).
 - Makes the restored skills available immediately, in the same session.
 - Silent and non-fatal — a missing `npx` or network blip never blocks startup.
+- Leaves `skills-lock.json` byte for byte as it was. The CLI has no frozen
+  mode and rewrites the hashes of a source that serves only its current
+  content, so the hook copies the lock aside and puts it back, even when the
+  restore fails or times out. To move the lock on purpose, run
+  `npx skills update`. Test: `bash tests/test-restore-skills.sh`.
 - Does **not** add, remove, or update which skills are pinned — that is the
   `npx skills` CLI's job. This plugin only restores what the lock file already
   declares.

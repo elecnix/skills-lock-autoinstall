@@ -12,6 +12,13 @@ cd "$dir"
 # `experimental_install` restores exactly what skills-lock.json pins and detects
 # the calling agent, installing without prompts. Stay silent and never fail the
 # session — a missing npx or a network blip should not block startup.
+#
+# The CLI has no frozen mode: a source that serves only its current content is
+# refetched, and the new hashes are written into the lock. A restore must never
+# change the lock, so put it back on every exit path, including a timeout.
+backup="$(mktemp)"
+cp skills-lock.json "$backup"
+trap 'cp "$backup" skills-lock.json; rm -f "$backup"' EXIT
 npx --yes skills experimental_install >/dev/null 2>&1 || true
 
 # Bridge the restored skills to where Claude Code actually reads them. `skills`
