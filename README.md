@@ -24,9 +24,13 @@ commit the lock file, restore on demand.
 
 ## Install
 
+The [elecnix/claude-plugins](https://github.com/elecnix/claude-plugins)
+marketplace lists the plugin. Add that marketplace once, then install the
+plugin from it:
+
 ```sh
-claude plugin marketplace add elecnix/skills-lock-autoinstall
-claude plugin install skills-lock-autoinstall@skills-lock-autoinstall
+claude plugin marketplace add elecnix/claude-plugins
+claude plugin install skills-lock-autoinstall@elecnix-plugins
 ```
 
 Restart Claude Code (or start a new session). On the next `startup`, any
